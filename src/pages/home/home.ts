@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 
-@IonicPage() 
+@IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -12,4 +12,7 @@ export class HomePage {
 
   }
 
+  login() { //Aula 111 Navegação
+    this.navCtrl.setRoot('CategoriasPage');
+  }
 }
