@@ -1,6 +1,7 @@
+import { AuthService } from './../../services/auth.service';
 import { Component } from '@angular/core';
 import { NavController, IonicPage, MenuController } from 'ionic-angular';
-import { credenciaisDTO } from '../../models/credenciais.dto';
+import { CredenciaisDTO } from '../../models/credenciais.dto';
 
 @IonicPage()
 @Component({
@@ -9,13 +10,16 @@ import { credenciaisDTO } from '../../models/credenciais.dto';
 })
 export class HomePage {
 
-  creds : credenciaisDTO = { //Aula 116. Obtendo os dados do formulário de login
+  creds: CredenciaisDTO = { //Aula 116. Obtendo os dados do formulário de login
 
     email: "",
     senha: ""
   };
 
-  constructor(public navCtrl: NavController, public menu: MenuController) {
+  constructor(
+    public navCtrl: NavController,
+    public menu: MenuController,
+    public auth: AuthService) {
 
   }
 
@@ -27,9 +31,11 @@ export class HomePage {
   }
 
   login() { //Aula 111 Navegação
-    console.log (this.creds);
-    this.navCtrl.setRoot('CategoriasPage');
-
-
+    this.auth.authenticate(this.creds)
+      .subscribe(response => {
+        console.log(response.headers.get('Authorization'));
+        this.navCtrl.setRoot('CategoriasPage');
+      },
+        error => { });
   }
 }
