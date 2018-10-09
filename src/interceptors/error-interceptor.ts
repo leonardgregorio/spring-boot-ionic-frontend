@@ -1,3 +1,5 @@
+//Aula 115. Criando um interceptor para tratamento de erros
+
 import { Injectable } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
