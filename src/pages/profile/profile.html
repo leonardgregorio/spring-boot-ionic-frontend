@@ -12,5 +12,12 @@
 
 <ion-content padding>
   {{ email }}
-  <!--aula 120-->>
+  <ion-avatar>
+      <img class="circle" [src]="cliente?.imageUrl || 'assets/imgs/avatar-blank.png'">
+    </ion-avatar>
+    <h2 text-center>{{cliente?.nome}}</h2>
+    <p text-center>{{cliente?.email}}</p>
+
+
+  <!--aula 120 e 121-->>
 </ion-content>

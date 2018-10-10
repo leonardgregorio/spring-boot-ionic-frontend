@@ -1,8 +1,9 @@
+import { API_CONFIG } from './../../config/api.config';
+import { ClienteService } from './../../services/domain/cliente.service';
 import { StorageService } from './../../services/storage.service';
-import { STORAGE_KEYS } from './../../config/storage_keys.config';
-import { LocalUser } from './../../models/local_user';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ClienteDTO } from '../../models/cliente.dto';
 
 @IonicPage()
 @Component({
@@ -11,13 +12,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ProfilePage {
 
-  email: string; //aula 120
-
+  cliente: ClienteDTO; //aula 121
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public storage: StorageService) {
+    public storage: StorageService,
+    public clienteService: ClienteService) {
   }
 
 
@@ -25,9 +26,22 @@ export class ProfilePage {
   ionViewDidLoad() {
 
     let localUser = this.storage.getLocalUser();
-    if (localUser && localUser.email){
-      this.email = localUser.email;
+    if (localUser && localUser.email) {
+      this.clienteService.findByEmail(localUser.email)
+        .subscribe(response => {
+          this.cliente = response;
+          this.getImageIfExists();
+        },
+          error => { });
     }
   }
 
+  getImageIfExists() {
+    this.clienteService.getImageFromBucket(this.cliente.id)
+      .subscribe(response => {
+        this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
+      },
+        error => { });
+  }
 }
+
