@@ -1,3 +1,5 @@
+import { StorageService } from './storage.service';
+import { LocalUser } from './../models/local_user';
 import { API_CONFIG } from './../config/api.config';
 import { HttpClient } from '@angular/common/http';
 //117. Começando a implementar a autenticação
@@ -7,15 +9,30 @@ import { CredenciaisDTO } from "../models/credenciais.dto";
 
 @Injectable()
 export class AuthService {
-     constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, public storage: StorageService) {
     }
-     authenticate(creds : CredenciaisDTO) {
+    authenticate(creds: CredenciaisDTO) {
         return this.http.post(
-            `${API_CONFIG.baseUrl}/login`, 
+            `${API_CONFIG.baseUrl}/login`,
             creds,
             {
                 observe: 'response',
                 responseType: 'text'
             });
     }
+
+    successfulLogin(authorizationValue: string) {
+        let tok = authorizationValue.substring(7);
+        let user: LocalUser = {
+            token: tok
+        };
+        this.storage.setLocalUser(user);
+    }
+
+    logout() {
+        this.storage.setLocalUser(null);
+    }
+
+
+
 }
