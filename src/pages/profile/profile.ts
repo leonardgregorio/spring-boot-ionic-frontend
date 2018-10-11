@@ -1,3 +1,4 @@
+import { HomePage } from './../home/home';
 import { API_CONFIG } from './../../config/api.config';
 import { ClienteService } from './../../services/domain/cliente.service';
 import { StorageService } from './../../services/storage.service';
@@ -27,12 +28,19 @@ export class ProfilePage {
 
     let localUser = this.storage.getLocalUser();
     if (localUser && localUser.email) {
-      this.clienteService.findByEmail(localUser.email)
-        .subscribe(response => {
+      this.clienteService.findByEmail(localUser.email) //faz a busca por email
+        .subscribe(response => { //retorna para o controlador a resposta cliente e invoca o metodo para procurar imagem do cliente
           this.cliente = response;
           this.getImageIfExists();
         },
-          error => { });
+          error => {
+            if (error.status == 403) { //se for um error 403 invoca a pagina home
+              this.navCtrl.setRoot('HomePage');
+            }
+          });
+    }
+    else { 
+      this.navCtrl.setRoot('HomePage');
     }
   }
 
