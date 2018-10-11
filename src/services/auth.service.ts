@@ -16,10 +16,20 @@ export class AuthService {
     
     constructor(public http: HttpClient, public storage: StorageService) {
     }
-    authenticate(creds: CredenciaisDTO) {
+    authenticate(creds: CredenciaisDTO) { 
         return this.http.post(
-            `${API_CONFIG.baseUrl}/login`,
+            `${API_CONFIG.baseUrl}/login`, //endpoint rest
             creds,
+            {
+                observe: 'response',
+                responseType: 'text'
+            });
+    }
+
+    refreshToken() { //metodo para reaproveitar o token disponel 
+        return this.http.post( //aula 125
+            `${API_CONFIG.baseUrl}/auth/refresh_token`, //endpoint rest
+            {},
             {
                 observe: 'response',
                 responseType: 'text'

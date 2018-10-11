@@ -30,9 +30,21 @@ export class HomePage {
     this.menu.swipeEnable(true);
   }
 
+  ionViewDidEnter() {//para atualizar o token com refresh token
+    this.auth.refreshToken()
+      .subscribe(response => {
+        this.auth.successfulLogin(response.headers.get('Authorization')); //se ok chama o successful com o novo token
+        this.navCtrl.setRoot('CategoriasPage');
+      },
+        error => { });
+  }
+
+
+
+
   login() { //Aula 111 Navegação
     this.auth.authenticate(this.creds)
-      .subscribe(response => {
+      .subscribe(response => {//
         this.auth.successfulLogin(response.headers.get('Authorization'));
         this.navCtrl.setRoot('CategoriasPage');
       },
