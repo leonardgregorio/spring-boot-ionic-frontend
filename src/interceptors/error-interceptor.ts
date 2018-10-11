@@ -4,14 +4,16 @@ import { StorageService } from './../services/storage.service';
 import { Injectable } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
+import { AlertController, NavController } from 'ionic-angular';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-    constructor(public storage: StorageService) {
+    constructor(
+         public storage: StorageService,
+         public alertCtrl: AlertController) {
 
     }
-
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         //console.log("Passou no interceptor");
@@ -30,22 +32,68 @@ export class ErrorInterceptor implements HttpInterceptor {
 
                 /* Verifica se o erro é um 403 e invoca um tratamento para ele*/
                 switch (errorObj.status) {
-                    case 403:
+                    case 401: //aula 124
+                        this.handle401();
+                        break;
+                    case 403: //aula 123
                         this.handle403();
                         break;
+                   /*  case 404:
+                      this.handle404();
+                        break; */
+                    default:
+                        this.handleDefaultEror(errorObj);
                 }
                 /* Propaga o erro para o controlador */
                 return Observable.throw(errorObj);
             }) as any;
     }
 
+
     handle403() {
         /* Faz o tratamento do erro 403, limpando o que tiver no localStorage */
         this.storage.setLocalUser(null);
     }
+
+ /*    handle404() {
+        // Faz o tratamento do erro 403, limpando o que tiver no localStorage 
+        console.log("Passou nessa bosta");
+         this.navCtrl.setRoot('HomePage');
+    } */
+
+    handle401() {
+        /* Faz o tratamento do erro 401, emitindo um alert*/
+        let alert = this.alertCtrl.create({
+            title: 'Erro 401: falha de autenticação',
+            message: 'Email ou senha incorretos',
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+
+    handleDefaultEror(errorObj) {
+        /* Faz o tratamento dos outros erros que nao 403 e 401 */
+        let alert = this.alertCtrl.create({
+            title: 'Erro ' + errorObj.status + ': ' + errorObj.error,
+            message: errorObj.message,
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
 }
+
 export const ErrorInterceptorProvider = {
     provide: HTTP_INTERCEPTORS,
     useClass: ErrorInterceptor,
     multi: true,
-}
+};

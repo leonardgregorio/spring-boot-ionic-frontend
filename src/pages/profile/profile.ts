@@ -35,12 +35,12 @@ export class ProfilePage {
         },
           error => {
             if (error.status == 403) { //se for um error 403 invoca a pagina home
-              this.navCtrl.setRoot('HomePage');
+              this.navCtrl.setRoot('HomePage'); //aula 123
             }
           });
     }
     else { 
-      this.navCtrl.setRoot('HomePage');
+      this.navCtrl.setRoot('HomePage'); //caso occora algum erro na condição do if, retorna para homepage
     }
   }
 
