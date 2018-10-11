@@ -40,8 +40,6 @@ export class HomePage {
   }
 
 
-
-
   login() { //Aula 111 Navegação
     this.auth.authenticate(this.creds)
       .subscribe(response => {//
@@ -49,5 +47,10 @@ export class HomePage {
         this.navCtrl.setRoot('CategoriasPage');
       },
         error => { });
+  }
+
+
+  signup(){
+    this.navCtrl.push('SignupPage'); //aula 127 - Push "empilha as paginas"
   }
 }
