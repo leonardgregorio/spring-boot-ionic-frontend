@@ -1,7 +1,11 @@
+import { EstadoService } from './../../services/domain/estado.service';
+import { CidadeService } from './../../services/domain/cidade.service';
 //aula 127 
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { EstadoDTO } from '../../models/estado.dto';
+import { CidadeDTO } from '../../models/cidade.dto';
 
 @IonicPage()
 @Component({
@@ -11,11 +15,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SignupPage {
 
   formGroup: FormGroup;
-
+  estados: EstadoDTO[]; //aula 129
+  cidades: CidadeDTO[];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder,
+    public cidadeService: CidadeService,
+    public estadoService: EstadoService) {
 
     /* Faz a instanciação do form group da pagina
     de cadastro, entre os [] estão as validações
@@ -38,6 +45,30 @@ export class SignupPage {
       cidadeId: [null, [Validators.required]]
     });
   }
+
+  ionViewDidLoad() {
+    this.estadoService.findAll() //Se ocorrer tudo bem, chama a linha subscribe...
+      .subscribe(response => {
+        this.estados = response; //e a resposta entra no vetor
+        this.formGroup.controls.estadoId.setValue(this.estados[0].id); //seta o primeiro valor do vetor para o item estado do form
+        this.updateCidades();
+      },
+        error => { }
+      );
+
+  }
+
+  updateCidades() {
+    let estado_id = this.formGroup.value.estadoId;
+    this.cidadeService.findAll(estado_id)
+      .subscribe(response => {
+        this.cidades = response;
+        this.formGroup.controls.cidadeId.setValue(null);
+      },
+        error => { }
+      );
+  }
+
 
   signupUser() {
     console.log("Enviou o form");
