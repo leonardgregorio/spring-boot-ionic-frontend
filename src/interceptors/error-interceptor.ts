@@ -5,13 +5,14 @@ import { Injectable } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 import { AlertController, NavController } from 'ionic-angular';
+import { FiledMessage } from '../models/filedmessage';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
     constructor(
-         public storage: StorageService,
-         public alertCtrl: AlertController) {
+        public storage: StorageService,
+        public alertCtrl: AlertController) {
 
     }
 
@@ -38,9 +39,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                     case 403: //aula 123
                         this.handle403();
                         break;
-                   /*  case 404:
-                      this.handle404();
-                        break; */
+                    /*  case 404:
+                       this.handle404();
+                         break; */
+                    case 422:
+                        this.handle422(errorObj);
+                        break;
                     default:
                         this.handleDefaultEror(errorObj);
                 }
@@ -55,11 +59,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         this.storage.setLocalUser(null);
     }
 
- /*    handle404() {
-        // Faz o tratamento do erro 403, limpando o que tiver no localStorage 
-        console.log("Passou nessa bosta");
-         this.navCtrl.setRoot('HomePage');
-    } */
+    /*    handle404() {
+           // Faz o tratamento do erro 403, limpando o que tiver no localStorage 
+           console.log("Passou nessa bosta");
+            this.navCtrl.setRoot('HomePage');
+       } */
 
     handle401() {
         /* Faz o tratamento do erro 401, emitindo um alert*/
@@ -76,6 +80,29 @@ export class ErrorInterceptor implements HttpInterceptor {
         alert.present();
     }
 
+    handle422(errorObj) {
+        let alert = this.alertCtrl.create({
+            title: '422: Erro de validação.',
+            message: this.listErrors(errorObj.errors),
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Ok'
+                }
+            ]
+        });
+        alert.present();
+    }
+
+    private listErrors(messages: FiledMessage[]): string {
+        let s: string = '';
+        for (var i = 0; i < messages.length; i++ ) {
+            s = s + '<p> <strong>' + messages[i].filedName + "</strong>: " + messages[i].message +"."+'</p>';
+        }
+        return s;
+    }
+    
+
     handleDefaultEror(errorObj) {
         /* Faz o tratamento dos outros erros que nao 403 e 401 */
         let alert = this.alertCtrl.create({
@@ -90,6 +117,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         });
         alert.present();
     }
+
 }
 
 export const ErrorInterceptorProvider = {

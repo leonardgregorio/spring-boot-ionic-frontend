@@ -33,6 +33,17 @@ export class ClienteService {
 
     }
 
+    //aula 131 Inserindo cliente
+    insert(obj: ClienteDTO) { //recebe um obj client dto
+        return this.http.post( //faz um post...
+            `${API_CONFIG.baseUrl}/clientes`, //no endpoint clientes
+            obj, //passando o obj dto
+            {
+                observe: 'response', //espera uma resposta...
+                responseType: 'text' //do tipo texto, que vem como texto para evitar um erro de json
+            }
+        );
+    }
 }
 
 /*getImageFromBucket(id: string): Observable<any> {
