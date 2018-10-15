@@ -27,11 +27,11 @@ export class CategoriasPage {
       .subscribe(response => {
         this.items = response;
       },
-        error => {});
+        error => { });
   }
 
 
-  showProdutos() {
-    this.navCtrl.push('ProdutosPage');
+  showProdutos(categoria_id: string) { //aula 133
+    this.navCtrl.push('ProdutosPage', { categoria_id: categoria_id }); //passando parametro para pagina o nome do atributo e o : valor
   }
 }

@@ -1,3 +1,4 @@
+import { ProdutoService } from './../../services/domain/produto.service';
 import { ProdutoDTO } from './../../models/produto.dto';
 /* aula 132 criando pagina de produtos
  */
@@ -15,22 +16,18 @@ export class ProdutosPage {
 
   items: ProdutoDTO[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams, //a partir desse objeto conseguimos parametros passados na navegacaos
+    public produtoService: ProdutoService) {
   }
 
   ionViewDidLoad() {
-    this.items = [
-      {
-        id: "1",
-        nome: 'Mouse',
-        preco: 80.99
-     },
-      {
-        id: "2",
-        nome: 'Teclado',
-        preco: 110.99
-     }
-    ]
-  };
-
+    let categoria_id = this.navParams.get('categoria_id');
+    this.produtoService.findByCategoria(categoria_id)
+      .subscribe(response => {
+        this.items = response['content'];
+      },
+        error => { });
+  }
 }
