@@ -1,3 +1,4 @@
+import { API_CONFIG } from './../../config/api.config';
 import { ProdutoService } from './../../services/domain/produto.service';
 import { ProdutoDTO } from './../../models/produto.dto';
 /* aula 132 criando pagina de produtos
@@ -5,6 +6,7 @@ import { ProdutoDTO } from './../../models/produto.dto';
 
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { subscribeOn } from 'rxjs/operator/subscribeOn';
 
 
 @IonicPage()
@@ -23,11 +25,23 @@ export class ProdutosPage {
   }
 
   ionViewDidLoad() {
-    let categoria_id = this.navParams.get('categoria_id');
-    this.produtoService.findByCategoria(categoria_id)
+    let categoria_id = this.navParams.get('categoria_id'); //usa o navparms para pegar o valor da pagina html associada
+    this.produtoService.findByCategoria(categoria_id) //chama a busca por produtos da categoria
       .subscribe(response => {
         this.items = response['content'];
+        this.loadImageUrls();
       },
         error => { });
+  }
+
+  loadImageUrls() {//chama a funcao para buscar a imagem no produtoService para cada item da pagina
+    for (var i = 0; i < this.items.length; i++) {
+      let item = this.items[i];
+      this.produtoService.getSmallImageFromBucket(item.id)
+        .subscribe(response => {
+          item.imageUrl = `${API_CONFIG.bucketBaseUrl}/prod${item.id}-small.jpg`;
+        },
+          error => { });
+    }
   }
 }
