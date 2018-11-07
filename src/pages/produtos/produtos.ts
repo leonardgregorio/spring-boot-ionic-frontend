@@ -45,8 +45,9 @@ export class ProdutosPage {
     }
   }
 
-
-  showDetail() { //exibe em datalhes um produto
-this.navCtrl.push('ProdutoDetailPage')
+  //exibe em datalhes um produto
+  showDetail(produto_id: string) { //recebe o parametro do produto
+    this.navCtrl.push('ProdutoDetailPage', { produto_id: produto_id }); //passa o parametro para a ProdutoDetailPage
+    //push abre  uma pagina por cima
   }
 }
