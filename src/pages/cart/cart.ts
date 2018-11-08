@@ -1,3 +1,4 @@
+import { ProdutoDTO } from './../../models/produto.dto';
 //aula 137. Criando página de carrinho de compras
 
 
@@ -15,26 +16,47 @@ import { CartService } from '../../services/domain/cart.service';
   templateUrl: 'cart.html',
 })
 export class CartPage {
-   items: CartItem[];
-   constructor(
-    public navCtrl: NavController, 
+  items: CartItem[];
+  constructor(
+    public navCtrl: NavController,
     public navParams: NavParams,
     public cartService: CartService,
     public produtoService: ProdutoService) {
   }
-   ionViewDidLoad() {
+  ionViewDidLoad() {
     let cart = this.cartService.getCart();
     this.items = cart.items;
     this.loadImageUrls();
   }
-   loadImageUrls() {
-    for (var i=0; i<this.items.length; i++) {
+  loadImageUrls() {
+    for (var i = 0; i < this.items.length; i++) {
       let item = this.items[i];
       this.produtoService.getSmallImageFromBucket(item.produto.id)
         .subscribe(response => {
           item.produto.imageUrl = `${API_CONFIG.bucketBaseUrl}/prod${item.produto.id}-small.jpg`;
         },
-        error => {});
+          error => { });
     }
-  }  
+  }
+
+  // aula 138. Terminando as funcionalidades do carrinho
+  removeItem(produto: ProdutoDTO) {
+    this.items = this.cartService.removeProduto(produto).items;
+  }
+
+  increaseItem(produto: ProdutoDTO) {
+    this.items = this.cartService.increaseQuantity(produto).items;
+  }
+
+  decreaseItem(produto: ProdutoDTO) {
+    this.items = this.cartService.decreaseQuantity(produto).items;
+  }
+
+  total(): number {
+    return this.cartService.total();
+  }
+
+  goOn() {
+    this.navCtrl.setRoot('CategoriasPage')
+  }
 }
