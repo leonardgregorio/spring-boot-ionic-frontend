@@ -1,6 +1,7 @@
 import { STORAGE_KEYS } from './../config/storage_keys.config';
 import { LocalUser } from './../models/local_user';
 import { Injectable } from "@angular/core";
+import { Cart } from '../models/cart';
 
 //Aula 118. Salvando os dados do usuário logado no localStorage
 
@@ -22,6 +23,27 @@ export class StorageService {
         }
         else {
             localStorage.setItem(STORAGE_KEYS.localUser, JSON.stringify(obj));
+        }
+    }
+
+    //aula 137. Criando página de carrinho de compras
+    //metodo para obter um cart do local storage
+    getCart(): Cart {
+        let str = localStorage.getItem(STORAGE_KEYS.cart);
+        if (str != null) {
+            return JSON.parse(str);
+        }
+        else {
+            return null;
+        }
+    }
+
+    setCart(obj: Cart) {
+        if (obj != null) {
+            localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(obj));
+        }
+        else {
+            localStorage.removeItem(STORAGE_KEYS.cart);
         }
     }
 }
