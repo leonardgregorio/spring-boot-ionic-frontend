@@ -27,6 +27,8 @@ export class MyApp {
     this.pages = [
       { title: 'Profile', component: 'ProfilePage' },
       { title: 'Categorias', component: 'CategoriasPage' },
+      //aula 139 - Para adicionar um botao flutuante no menu para acessar direto uma pagina
+      {title: 'Carrinho', component: 'CartPage'},
       { title: 'Logout', component: '' } //aula 126
     ];
 

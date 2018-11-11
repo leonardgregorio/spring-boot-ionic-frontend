@@ -12,6 +12,10 @@
 
 
 <ion-content padding>
+    <!--   Aula 139 - Adicionar um botao superior para acessar o carrinho-->
+    <ion-fab top right edge>
+        <button navPush="CartPage" ion-fab mini><ion-icon name="cart"></ion-icon></button>
+      </ion-fab>    
   <ion-list>
     <button ion-item *ngFor="let item of items" (click)="showDetail(item.id)"> <!-- Aula 135 - binding do evento click -->
       
