@@ -18,7 +18,8 @@
     <button ion-item *ngFor="let item of items"> <!-- Para cada item da lista items exiba os items abaixo -->
       <h2> {{item.logradouro}}, {{item.numero}}</h2>
       <p> {{item.complemento}} {{item.bairro}} CEP {{item.cep}}</p>
-      <p> {{item.cidade.nome}}, {{item.cidade.estado.nome}}</p>
+      <p>{{item.cidade.nome}}, {{item.cidade.estado.nome}}</p>
+
     </button>
   </ion-list>
 </ion-content>

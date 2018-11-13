@@ -1,5 +1,6 @@
 //Aula Tela escolha de endereco
 
+
 import { CidadeDTO } from "./cidade.dto";
 
 export interface EnderecoDTO {

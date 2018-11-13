@@ -16,14 +16,8 @@ export class ClienteService {
 
     }
 
-    findByEmail(email: string): Observable<ClienteDTO> {
-
-        let token = this.storage.getLocalUser().token;
-        let authHeader = new HttpHeaders({ 'authorization': 'Bearer ' + token });
-
-        return this.http.get<ClienteDTO>(
-            `${API_CONFIG.baseUrl}/clientes/email?value=${email}`,
-            { 'headers': authHeader });
+    findByEmail(email: string) {
+        return this.http.get(`${API_CONFIG.baseUrl}/clientes/email?value=${email}`);
     }
 
     //aula 121
@@ -51,3 +45,14 @@ export class ClienteService {
     return this.http.get(url, { responseType: 'blob' });
 
 }*/
+
+/*  Trocado na aula 143 - Estava diferente do mostrado no video, porem, funcionando
+findByEmail(email: string): Observable<ClienteDTO> {
+
+    let token = this.storage.getLocalUser().token;
+    let authHeader = new HttpHeaders({ 'authorization': 'Bearer ' + token });
+
+    return this.http.get<ClienteDTO>(
+        `${API_CONFIG.baseUrl}/clientes/email?value=${email}`,
+        { 'headers': authHeader });
+} */

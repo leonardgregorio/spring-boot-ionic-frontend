@@ -30,7 +30,7 @@ export class ProfilePage {
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email) //faz a busca por email
         .subscribe(response => { //retorna para o controlador a resposta cliente e invoca o metodo para procurar imagem do cliente
-          this.cliente = response;
+          this.cliente = response as ClienteDTO //conforme aula 143 - Onde removemos a tipagem da busca por email;
           this.getImageIfExists();
         },
           error => {
@@ -39,7 +39,7 @@ export class ProfilePage {
             }
           });
     }
-    else { 
+    else {
       this.navCtrl.setRoot('HomePage'); //caso occora algum erro na condição do if, retorna para homepage
     }
   }
