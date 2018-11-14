@@ -1,3 +1,5 @@
+import { StorageService } from './../../services/storage.service';
+import { PedidoDTO } from './../../models/pedido.dto';
 import { ClienteService } from './../../services/domain/cliente.service';
 import { EnderecoDTO } from './../../models/endereco.dto';
 //Aula Tela escolha de endereco
@@ -5,7 +7,7 @@ import { EnderecoDTO } from './../../models/endereco.dto';
 
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { StorageService } from '../../services/storage.service';
+import { CartService } from '../../services/domain/cart.service';
 
 @IonicPage()
 @Component({
@@ -16,11 +18,14 @@ export class PickAddressPage {
 
   items: EnderecoDTO[]; //[] vira uma colecao
 
+  pedido: PedidoDTO; //aula 144 - armazenando dados do pedido
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
-    public clienteService: ClienteService) {
+    public clienteService: ClienteService,
+    public cartService: CartService) {
   }
 
   ionViewDidLoad() {
@@ -29,6 +34,15 @@ export class PickAddressPage {
       this.clienteService.findByEmail(localUser.email) //faz a busca por email
         .subscribe(response => { //retorna para o controlador a resposta e faz o carregamento na variavel items
           this.items = response['enderecos']; //busca apenas o campo enderecos da resposta
+
+          let cart = this.cartService.getCart();
+
+          this.pedido = {  //aula 144 - armazenando dados do pedido
+            cliente: { id: response['id'] },
+            enderecoDeEntrega: null,
+            pagamento: null,
+            itens: cart.items.map(x => { return { quantidade: x.quantidade, produto: { id: x.produto.id } } }),
+          }
         },
           error => {
             if (error.status == 403) { //se for um error 403 invoca a pagina home
@@ -39,6 +53,11 @@ export class PickAddressPage {
     else {
       this.navCtrl.setRoot('HomePage'); //caso occora algum erro na condição do if, retorna para homepage
     }
+  }
+
+  nextPage(item: EnderecoDTO) {
+    this.pedido.enderecoDeEntrega = {id: item.id};
+    console.log(this.pedido);
   }
 }
 
