@@ -13,3 +13,4 @@ export interface EnderecoDTO {
     cep: string;
     cidade: CidadeDTO;
 }
+
