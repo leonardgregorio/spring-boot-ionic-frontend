@@ -26,6 +26,10 @@ export class ProdutosPage {
   }
 
   ionViewDidLoad() {
+    this.loadData();
+  }
+
+  loadData() {
     let categoria_id = this.navParams.get('categoria_id'); //usa o navparms para pegar o valor da pagina html associada
 
     let loader = this.presentLoading(); // aula 149 - Tela de loader enquanto carrega itens
@@ -40,7 +44,6 @@ export class ProdutosPage {
           loader.dismiss();
         });
   }
-
   loadImageUrls() {//chama a funcao para buscar a imagem no produtoService para cada item da pagina
     for (var i = 0; i < this.items.length; i++) {
       let item = this.items[i];
@@ -66,4 +69,14 @@ export class ProdutosPage {
     loader.present();
     return loader;
   }
+
+  //Aula 150 - Refresher
+  doRefresh(refresher) {
+
+    setTimeout(() => {
+      this.loadData(); //recarrega os dados 
+      refresher.complete();
+    }, 1000);
+  }
+
 }
