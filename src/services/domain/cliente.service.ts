@@ -20,6 +20,11 @@ export class ClienteService {
         return this.http.get(`${API_CONFIG.baseUrl}/clientes/email?value=${email}`);
     }
 
+    //Aula 146. Tela de confirmação de pedido
+    findById(id: string) {
+        return this.http.get(`${API_CONFIG.baseUrl}/clientes/${id}`);
+    }
+
     //aula 121
     getImageFromBucket(id: string): Observable<any> {
         let url = `${API_CONFIG.bucketBaseUrl}/cp${id}.jpg`

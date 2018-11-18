@@ -24,22 +24,21 @@ export class PaymentPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public formBuilder: FormBuilder)
-     {
+    public formBuilder: FormBuilder) {
     this.pedido = this.navParams.get('pedido'); //atribuir na veriavel pedido o objeto que vai como parametro como parametro na pagina de nagegacao de endereco
-     
+
     console.log(this.pedido);
-    
+
     this.formGroup = this.formBuilder.group({
-        numeroDeParcelas: [1, Validators.required], 
-        "@type": ["pagamentoComCartao", Validators.required]
-      });
-  
+      numeroDeParcelas: [1, Validators.required],
+      "@type": ["pagamentoComCartao", Validators.required]
+    });
+
   }
 
   nextPage() {
     this.pedido.pagamento = this.formGroup.value;
-    console.log(this.pedido);
-  }
+    this.navCtrl.setRoot('OrderConfirmationPage', {pedido: this.pedido});
+    }
 
 }
