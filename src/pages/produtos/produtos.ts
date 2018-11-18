@@ -5,7 +5,7 @@ import { ProdutoDTO } from './../../models/produto.dto';
  */
 
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { subscribeOn } from 'rxjs/operator/subscribeOn';
 
 
@@ -21,17 +21,24 @@ export class ProdutosPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams, //a partir desse objeto conseguimos parametros passados na navegacaos
-    public produtoService: ProdutoService) {
+    public produtoService: ProdutoService,
+    public loadingCtrl: LoadingController) { //aula 149
   }
 
   ionViewDidLoad() {
     let categoria_id = this.navParams.get('categoria_id'); //usa o navparms para pegar o valor da pagina html associada
+
+    let loader = this.presentLoading(); // aula 149 - Tela de loader enquanto carrega itens
+
     this.produtoService.findByCategoria(categoria_id) //chama a busca por produtos da categoria
       .subscribe(response => {
         this.items = response['content'];
+        loader.dismiss();
         this.loadImageUrls();
       },
-        error => { });
+        error => {
+          loader.dismiss();
+        });
   }
 
   loadImageUrls() {//chama a funcao para buscar a imagem no produtoService para cada item da pagina
@@ -49,5 +56,14 @@ export class ProdutosPage {
   showDetail(produto_id: string) { //recebe o parametro do produto
     this.navCtrl.push('ProdutoDetailPage', { produto_id: produto_id }); //passa o parametro para a ProdutoDetailPage
     //push abre  uma pagina por cima
+  }
+
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Aguarde..."
+      //duration:3000
+    });
+    loader.present();
+    return loader;
   }
 }
